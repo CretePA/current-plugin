@@ -69,8 +69,15 @@ def check():
 def probe():
     url = endpoint()
     discovery = url.removesuffix('/mcp/portal') + '/.well-known/oauth-protected-resource/mcp/portal'
-    with urlopen(discovery, timeout=20) as response:
-        metadata = json.load(response)
+    try:
+        with urlopen(discovery, timeout=20) as response:
+            metadata = json.load(response)
+    except HTTPError as error:
+        raise ValueError(
+            f'Portal OAuth discovery returned HTTP {error.code} at {discovery}. '
+            'Verify the portal MCP deployment and shared OAuth configuration before '
+            'attempting plugin sign-in. WorkOS resource registration alone is insufficient.'
+        ) from error
     if metadata.get('resource') != url or not metadata.get('authorization_servers'):
         raise ValueError('OAuth discovery must identify the exact portal resource and issuer')
     request = Request(url, data=b'{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"current-release-check","version":"1.0"}}}',
