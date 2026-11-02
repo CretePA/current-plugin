@@ -20,5 +20,6 @@
       "Find the documents my accountant still needs."
     ]
   },
-  "mcpServers": "./.mcp.json"
+  "mcpServers": "./.mcp.json",
+  "license": "MIT"
 }

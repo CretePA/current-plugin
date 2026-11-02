@@ -11,8 +11,8 @@ MCP resource. Deployment configuration remains owned by platform.
 
 Before submission:
 
-- Choose the package license with the publisher; add it to both package manifests
-  and include the license text in each package. No license has been selected yet.
+- MIT is selected for the plugin packages. The root license is copied into both
+  packages and checked for consistency; it does not license the hosted platform.
 - Confirm `support_email`, `privacy_policy_url`, and `walkthrough_url`, then add
   them to `release.json`. Enter them in provider listing forms; these release
   fields are not automatically imported into provider metadata.

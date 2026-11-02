@@ -36,6 +36,7 @@ def generated_files():
     }}}, indent=2).encode() + b'\n'
     skill = (ROOT / 'shared/skills/collect-documents/SKILL.md').read_bytes()
     for package in PACKAGES.values():
+        yield package / 'LICENSE', (ROOT / 'LICENSE').read_bytes()
         yield package / '.mcp.json', config
         yield package / 'skills/collect-documents/SKILL.md', skill
     yield PACKAGES['openai'] / 'README.md', (PACKAGES['claude'] / 'README.md').read_bytes()
