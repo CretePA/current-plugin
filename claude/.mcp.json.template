@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "current": {
+      "type": "http",
+      "url": "__PORTAL_MCP_URL__"
+    }
+  }
+}

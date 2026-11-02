@@ -1,0 +1,23 @@
+{
+  "name": "current",
+  "version": "0.1.0",
+  "description": "Find your accountant\u2019s missing documents and submit confirmed files through Current.",
+  "author": {
+    "name": "Current"
+  },
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Current",
+    "shortDescription": "Get documents to your accountant.",
+    "longDescription": "Read document requests, collect files from sources you authorize, and verify submissions to the right return.",
+    "developerName": "Current",
+    "category": "Productivity",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Find the documents my accountant still needs."
+    ]
+  }
+}

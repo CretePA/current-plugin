@@ -1,0 +1,9 @@
+{
+  "name": "current",
+  "displayName": "Current",
+  "version": "0.1.0",
+  "description": "Find the documents your accountant needs and submit them to Current.",
+  "author": { "name": "Current" },
+  "homepage": "https://current.co",
+  "mcpServers": "./.mcp.json"
+}
