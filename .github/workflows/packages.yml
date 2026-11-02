@@ -1,0 +1,22 @@
+name: Check plugin packages
+on: [push, pull_request, workflow_dispatch]
+permissions:
+  contents: read
+jobs:
+  packages:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python3 scripts/release.py check
+      - run: |
+          python3 scripts/release.py build
+          cp dist/SHA256SUMS /tmp/first-build.sha256
+          python3 scripts/release.py build
+          diff /tmp/first-build.sha256 dist/SHA256SUMS
+      - uses: actions/upload-artifact@v4
+        with:
+          name: current-plugin-packages
+          path: dist/

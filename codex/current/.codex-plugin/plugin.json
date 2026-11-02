@@ -19,5 +19,6 @@
     "defaultPrompt": [
       "Find the documents my accountant still needs."
     ]
-  }
+  },
+  "mcpServers": "./.mcp.json"
 }

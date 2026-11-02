@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "current": {
+      "type": "http",
+      "url": "https://app.current.co/mcp/portal"
+    }
+  }
+}

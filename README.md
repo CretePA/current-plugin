@@ -1,36 +1,41 @@
 # Current plugins
 
-Codex and Claude packages for collecting an accountant's requested documents.
-Both bundle the same [skill](shared/skills/collect-documents/SKILL.md) and a remote
-portal MCP connection. The server, OAuth, permissions, and portal UI live in
-[platform](https://github.com/CretePA/platform).
+One document-collection skill and one OAuth-protected portal MCP connection,
+packaged for OpenAI (ChatGPT/Codex) and Claude. Platform owns the server, access
+controls, uploads and portal UI. This repository owns the installable packages.
 
-## Build
+| Provider | Installable folder | Distribution |
+| --- | --- | --- |
+| OpenAI | `codex/current` | Upload the generated ZIP to the Plugins portal |
+| Claude | `claude` | Submit this GitHub folder to the developer portal |
 
-Use Python 3, a deployed HTTPS `/mcp/portal` endpoint, and new output directories:
+Both folders are self-contained, committed packages. No build step is required
+by the installing client. The shared skill remains authored in
+`shared/skills/collect-documents/SKILL.md`; generated copies are checked in CI.
+
+## Develop and package
+
+Python 3.11+; no Python dependencies:
 
 ```sh
-python3 codex/build.py --mcp-url "$PORTAL_MCP_URL" --output dist/codex/current
-python3 claude/build.py --mcp-url "$PORTAL_MCP_URL" --output dist/claude
-claude plugin validate --strict dist/claude/current
+python3 scripts/release.py sync        # after changing shared skill or endpoint
+python3 scripts/release.py check       # reject stale generated copies
+python3 scripts/release.py build       # reproducible ZIPs + SHA256SUMS in dist/
+claude plugin validate --strict claude
 ```
 
-Codex produces a self-contained `current` folder; Claude also produces
-`dist/claude/current-claude.zip`. Both copy the shared skill. Install the built
-artifact, authorize Current, and verify a fresh tool call. Rebuild after edits.
-Use Codex's plugin-creator validator for its built folder.
+`release.json` owns the production endpoint. Do not put secrets or reviewer
+credentials in this file or either package. Local/tunnel configurations belong
+in a separate test copy, never in release packages.
 
 ## Release
 
-Source templates are not installable packages. Claude directory submission must
-point at a committed **built folder**, including its skill and MCP configuration.
-Do not point a client install button at this source repository as if it were a
-published plugin listing; configure verified provider install links separately.
+```sh
+python3 scripts/release.py probe       # read-only production OAuth/MCP check
+python3 scripts/release.py submission  # also require publication metadata
+```
 
-Before public distribution: stable endpoint, publisher/privacy/support metadata,
-license decision, and provider approval. Keep credentials and customer data out
-of packages. This repository is private; neither plugin is publicly listed.
-
-Verify install → authorize → read requests → confirm upload → verify receipt →
-revoke → reconnect. Installation, authorization, and a successful tool call are
-separate checks. A host without file/network access must use portal upload.
+See [RELEASE.md](RELEASE.md) for remaining submission decisions and the eight
+review scenarios. Package validation is not provider approval or an authenticated
+E2E test. Do not configure portal install buttons with this repository URL as a
+substitute for verified provider listing links. No automatic publication occurs.
