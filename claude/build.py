@@ -23,7 +23,7 @@ args.output.mkdir(parents=True, exist_ok=False)
 plugin = args.output / 'current'
 shutil.copytree(source / '.claude-plugin', plugin / '.claude-plugin')
 shutil.copytree(skill, plugin / 'skills/collect-documents')
-shutil.copyfile(source / 'PLUGIN.md', plugin / 'README.md')
+shutil.copyfile(source / 'README.md', plugin / 'README.md')
 config = json.loads((source / '.mcp.json.template').read_text())
 config['mcpServers']['current']['url'] = args.mcp_url
 (plugin / '.mcp.json').write_text(json.dumps(config, indent=2) + '\n')

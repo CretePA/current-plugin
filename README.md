@@ -1,54 +1,36 @@
 # Current plugins
 
-One workflow: understand outstanding document requests, find files in sources the
-client authorizes, confirm the upload, and verify delivery. Each plugin packages
-the restricted portal MCP and the same [collect-documents skill](shared/skills/collect-documents/SKILL.md).
-Current enforces access; the skill does not grant it.
+Codex and Claude packages for collecting an accountant's requested documents.
+Both bundle the same [skill](shared/skills/collect-documents/SKILL.md) and a remote
+portal MCP connection. The server, OAuth, permissions, and portal UI live in
+[platform](https://github.com/CretePA/platform).
 
-| Provider | Source | Build output |
-| --- | --- | --- |
-| Codex | [Codex package](codex/README.md) | Self-contained `current` plugin folder |
-| Claude | [Claude package](claude/README.md) | Self-contained folder and plugin ZIP |
+## Build
 
-Run from the repository root with a deployed HTTPS portal endpoint and new output
-directories:
+Use Python 3, a deployed HTTPS `/mcp/portal` endpoint, and new output directories:
 
 ```sh
-python3 codex/build.py \
-  --mcp-url "$PORTAL_MCP_URL" --output /tmp/current-codex-release/current
-python3 claude/build.py \
-  --mcp-url "$PORTAL_MCP_URL" --output /tmp/current-claude-release
-claude plugin validate --strict /tmp/current-claude-release/current
+python3 codex/build.py --mcp-url "$PORTAL_MCP_URL" --output dist/codex/current
+python3 claude/build.py --mcp-url "$PORTAL_MCP_URL" --output dist/claude
+claude plugin validate --strict dist/claude/current
 ```
 
-Builders copy the shared skill into each artifact. Rebuild and reinstall after
-changing the source. Never package credentials, customer data, or a temporary
-tunnel in a public release. Neither plugin is a published listing yet.
+Codex produces a self-contained `current` folder; Claude also produces
+`dist/claude/current-claude.zip`. Both copy the shared skill. Install the built
+artifact, authorize Current, and verify a fresh tool call. Rebuild after edits.
+Use Codex's plugin-creator validator for its built folder.
 
-Installation, OAuth authorization, and a successful tool call are distinct checks.
-Verify each host with a synthetic client: install → authorize → read requests →
-confirmed upload → verify receipt → revoke → reconnect → fresh read. A runtime
-without file/network access must use portal upload for file submission.
+## Release
 
-Public release requires a stable endpoint, exact OAuth resource and verified
-provider identity, approved distribution metadata, and real listing URLs. Keep
-provider-specific setup instructions with each package. Portal UX and rollout are
-separate from artifact packaging.
+Source templates are not installable packages. Claude directory submission must
+point at a committed **built folder**, including its skill and MCP configuration.
+Do not point a client install button at this source repository as if it were a
+published plugin listing; configure verified provider install links separately.
 
-## Ownership and release status
+Before public distribution: stable endpoint, publisher/privacy/support metadata,
+license decision, and provider approval. Keep credentials and customer data out
+of packages. This repository is private; neither plugin is publicly listed.
 
-This repository owns plugin manifests, builders, and the shared document-collection
-skill. The MCP server, authentication, permissions, and portal UI remain in
-[CretePA/platform](https://github.com/CretePA/platform).
-
-Imported from platform commit `ed2c879b9ea974aa6419668c25c1e376cd30511a`,
-under `integrations/personal-agents/`. Only plugin files were transferred.
-
-These are source templates: build them before installation. Claude directory
-submission must point at the built self-contained folder, not `claude/` here,
-because the shared skill and endpoint are materialized by the builder.
-
-The repository is private during preparation. Before public distribution, choose
-a license with the owner, finalize publisher/privacy/support metadata, and deploy
-a stable MCP endpoint. No open-source license is granted by this scaffold.
-Neither package is approved or publicly listed.
+Verify install → authorize → read requests → confirm upload → verify receipt →
+revoke → reconnect. Installation, authorization, and a successful tool call are
+separate checks. A host without file/network access must use portal upload.
