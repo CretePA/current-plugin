@@ -4,8 +4,9 @@
 
 The packages target `https://app.current.co/mcp/portal`. On November 2, 2026,
 its public portal resource discovery returned HTTP 404, `OAuth is not configured`.
-Configure `OS_PORTAL_MCP_OAUTH_ISSUER` and `OS_PORTAL_MCP_OAUTH_RESOURCE` on the
-production server, then run `python3 scripts/release.py probe` again. A reachable
+Deploy the shared OAuth configuration update in platform PR #7553, which reuses
+the existing MCP issuer and derives the `/mcp/portal` audience. No additional
+production variables are required. Then run `python3 scripts/release.py probe` again. A reachable
 HTTPS host alone does not establish working OAuth. Do not substitute the staff
 MCP resource. Deployment configuration remains owned by platform.
 
