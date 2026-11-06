@@ -8,8 +8,8 @@
   "skills": "./skills/",
   "interface": {
     "displayName": "Current",
-    "shortDescription": "Get documents to your accountant.",
-    "longDescription": "Read document requests, collect files from sources you authorize, and verify submissions to the right return.",
+    "shortDescription": "Documents for your accountant",
+    "longDescription": "Read your accountant\u2019s document requests, collect files from sources you authorize, and verify submissions to the right return. Requires a Current client account. Uploads require file access and outbound HTTP in your assistant; otherwise, use the Current portal to upload.",
     "developerName": "Current",
     "category": "Productivity",
     "capabilities": [

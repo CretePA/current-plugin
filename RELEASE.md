@@ -2,30 +2,32 @@
 
 ## Current readiness
 
-The packages target `https://app.current.co/mcp/portal`. On November 2, 2026,
-its public portal resource discovery returned HTTP 404, `OAuth is not configured`.
-Deploy the shared OAuth configuration update in platform PR #7553, which reuses
-the existing MCP issuer and derives the `/mcp/portal` audience. No additional
-production variables are required. Then run `python3 scripts/release.py probe` again. A reachable
-HTTPS host alone does not establish working OAuth. Do not substitute the staff
-MCP resource. Deployment configuration remains owned by platform.
+The packages target `https://app.current.co/mcp/portal`. On November 5, 2026,
+public OAuth discovery and the unauthenticated 401 challenge passed. Real Codex
+OAuth, document discovery, upload, receipt verification and same-key retry passed
+against a synthetic production client. Claude connected and read requests, but
+its personal-account sandbox could not reach the upload endpoint. ChatGPT and
+Claude Team/Enterprise upload have not been verified.
 
-Before submission:
+Submission is not ready until the following are complete:
 
-- MIT is selected for the plugin packages. The root license is copied into both
-  packages and checked for consistency; it does not license the hosted platform.
-- Confirm `support_email`, `privacy_policy_url`, and `walkthrough_url`, then add
-  them to `release.json`. Enter them in provider listing forms; these release
-  fields are not automatically imported into provider metadata.
-- Verify publisher identity and developer account permissions for the agreed
-  owners. Complete legal/data-handling attestations with those owners.
-- Deploy the portal tool stack. Enable `client-portal-agent` for synthetic reviewer
-  identities. Verify all review scenarios on each advertised product surface.
-- Provide private reviewer credentials in the provider portal only. OpenAI
-  requires a sample-data account without interactive email/SMS codes, magic
-  links, or manual MFA approval. Do not weaken normal client authentication.
-- Record the walkthrough and results below. These scenarios are planned cases,
-  not claims of completed production validation.
+- Confirm a monitored `support_email` and record the walkthrough URL in
+  `release.json`. The public privacy policy is configured. Enter these fields
+  in provider listing forms; they are not automatically imported into metadata.
+- Create a dedicated synthetic reviewer login. Production WorkOS currently has
+  Magic Auth enabled and email/password disabled. OpenAI requires reviewers to
+  sign in without email/SMS codes, magic links or manual MFA. Agree on a supported
+  reviewer authentication approach before changing production configuration;
+  do not bypass authentication or disable protections for existing clients.
+- Scope that identity to synthetic client data and enable `client-portal-agent`
+  for that identity only. Keep credentials out of this repo and provide them
+  privately in the provider portal.
+- Complete the remaining scenario checks and the recording below. In particular,
+  revocation did not immediately invalidate a cached access token; rejection at
+  token expiry is still unverified. Reconnection itself worked.
+- Verify publisher identity and account permissions. Have the responsible owners
+  complete legal and data-handling attestations. MIT covers these packages, not
+  the hosted platform.
 
 ## Release procedure
 
@@ -68,9 +70,49 @@ may have provider prefixes. Never include credentials in evidence.
 | Negative 2: ambiguous year | Provide destinations for two years and ask “upload my W-2” | Ask which return and confirm files before `uploads.begin`; no silent latest-year choice. |
 | Negative 3: unavailable upload capability | Use a surface without file bytes or outbound HTTP | Explain limitation and offer portal upload; no fabricated receipt or claim of delivery. |
 
-Also turn the feature flag off after issuing an upload credential: MCP data
-access and credential redemption must fail. Test provider cancellation, expired
-auth and a fresh account installation rather than only existing local installs.
+### Production evidence — November 5, 2026
+
+These results used a synthetic production client through Codex CLI 0.166.0 and
+personal Claude. They are not proof that every advertised host supports uploads.
+
+| Case | Observed result |
+| --- | --- |
+| Positive 1 | Codex and Claude returned the synthetic client’s general destination and 2024/2025 returns. |
+| Positive 2 | Both read the selected return’s document requests. |
+| Positive 3 | Codex uploaded the synthetic W-2; receipt and accountant UI agreed on the 2024 destination. Stored-byte checksum comparison remains unverified. |
+| Positive 4 | Same-key retry returned the same file ID and one receipt. |
+| Positive 5 | Both reconnected. Codex read requests afterward; Claude showed the connected tool catalog. Cached Codex access still worked after portal revocation; expiry rejection remains unverified. |
+| Negative 1 | Codex stopped when the synthetic unavailable client was absent from authorized destinations. This tests agent behavior, not a direct unauthorized-ID backend request. |
+| Negative 2 | Codex asked which of 2024/2025 should receive the W-2 and requested the file; nothing was uploaded. |
+| Negative 3 | Claude could begin an upload but could not send bytes because its sandbox could not resolve the upload host. No successful receipt was established. Verify the user-facing portal fallback before marking this case passed. |
+
+Do not mark a case passed solely because OAuth or tool discovery succeeded.
+Record the remaining results against the dedicated reviewer identity before
+submission. Feature-flag-off credential redemption, expired auth, cancellation
+and a fresh-account installation remain additional checks.
+
+## Walkthrough to record
+
+Use only the synthetic reviewer account. Hide credentials, consent codes,
+access tokens and upload credentials throughout; never include them in a video.
+
+1. Install the exact release package in the target assistant. Show its version.
+2. Connect Current, complete OAuth, and show the connected state. Pause recording
+   during credential entry. Separately confirm a reviewer can sign in without
+   an interactive code.
+3. Ask “Which returns can I send documents to?” Show only the synthetic client.
+4. Ask “What is missing for my 2024 Form 1040?” Show the requested document.
+5. Attach a synthetic matching file and confirm submission. Show the receipt and
+   the same document in the portal, without exposing internal upload credentials.
+6. Retry with the same key and show a single receipt. Show the ambiguous-year
+   question and unavailable-client refusal from the negative cases.
+7. Disconnect, demonstrate the observed access-token expiry behavior, reconnect,
+   and successfully read requests again.
+8. For a host that cannot upload, show the limitation and working portal fallback
+   instead of claiming success. Do not present a Codex upload as a Claude upload.
+
+Upload the recording to a reviewer-accessible location and set `walkthrough_url`
+in `release.json`. This script is not a recording or evidence of a completed run.
 
 ## Release notes — 0.1.0
 
