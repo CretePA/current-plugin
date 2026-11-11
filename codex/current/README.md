@@ -30,3 +30,5 @@ to files in other services requires your separate permission.
 
 To revoke access, disconnect the assistant in Current's portal settings.
 Removing the plugin alone does not revoke its authorization.
+
+[Privacy policy](https://www.current.co/privacy-policy)
