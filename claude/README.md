@@ -1,13 +1,32 @@
 # Current
 
-Find the documents your accountant needs and send them to the right return in Current.
+Find the documents your accountant needs and send them to Current.
 
-Install Current in your assistant, then sign in to Current when asked to connect. You need an existing Current client portal login and an assistant account that permits plugins. Your organization may restrict plugin installation.
+## Connect
 
-Ask: “Use Current to help me find the documents my accountant still needs.” Your assistant reads your outstanding requests, asks which return you mean if necessary, and searches only the sources you authorize. Before uploading, it confirms the files and destination with you.
+1. Install the plugin in your assistant.
+2. Connect Current and sign in with your client portal account.
+3. Ask: “What documents does my accountant still need?”
 
-The plugin contains one document collection skill and one remote Current MCP connector. It can discover authorized destinations, read document requests, authorize uploads, and verify your upload receipts. It does not expose your accountant's internal notes or return contents. Uploaded files and document request data are handled by Current and your assistant; files from other services require your separate access to those services.
+You need an assistant account that allows plugins. Your organization may limit
+installation.
 
-Uploading requires an assistant runtime that can read your files and send an outbound HTTP upload. If that capability is unavailable, use the Current portal to upload; the assistant must not report success until Current confirms receipt. A receipt confirms delivery, not accountant review.
+## Send documents
 
-Disconnect Current in your portal's connected-app settings to revoke its access. Removing the plugin alone is not a substitute for revoking Current's authorization.
+The assistant reads your document requests and asks which return to use when
+needed. It searches only the sources you allow. It confirms the files and return
+before it uploads them.
+
+Uploads require file access and outbound HTTP. If your assistant cannot send
+files, upload them in the Current portal. The assistant can then check receipts.
+A receipt confirms delivery. It does not confirm accountant review.
+
+## Access
+
+The plugin can list your authorized returns, read requests, start uploads, and
+check receipts. It cannot read internal accountant notes or return contents.
+Current and your assistant handle the request data and files you submit. Access
+to files in other services requires your separate permission.
+
+To revoke access, disconnect the assistant in Current's portal settings.
+Removing the plugin alone does not revoke its authorization.

@@ -1,41 +1,43 @@
 # Current plugins
 
-One document-collection skill and one OAuth-protected portal MCP connection,
-packaged for OpenAI (ChatGPT/Codex) and Claude. Platform owns the server, access
-controls, uploads and portal UI. This repository owns the installable packages.
+Connect your assistant to Current. Find requested documents, send files to the
+correct return, and check that Current received them.
 
-| Provider | Installable folder | Distribution |
+This repo contains one shared skill and an MCP connection for each provider.
+The server and portal code stay in the private platform repo.
+
+| Provider | Plugin folder | Submission |
 | --- | --- | --- |
-| OpenAI | `codex/current` | Upload the generated ZIP to the Plugins portal |
-| Claude | `claude` | Submit this GitHub folder to the developer portal |
+| OpenAI | `codex/current` | Upload the built ZIP to the Plugins portal |
+| Claude | `claude` | Submit this folder through the developer portal |
 
-Both folders are self-contained, committed packages. No build step is required
-by the installing client. The shared skill remains authored in
-`shared/skills/collect-documents/SKILL.md`; generated copies are checked in CI.
+## Build
 
-## Develop and package
-
-Python 3.11+; no Python dependencies:
+Use Python 3.11 or later. No Python packages are required.
 
 ```sh
-python3 scripts/release.py sync        # after changing shared skill or endpoint
-python3 scripts/release.py check       # reject stale generated copies
-python3 scripts/release.py build       # reproducible ZIPs + SHA256SUMS in dist/
+python3 scripts/release.py sync
+python3 scripts/release.py check
+python3 scripts/release.py build
 claude plugin validate --strict claude
 ```
 
-`release.json` owns the production endpoint. Do not put secrets or reviewer
-credentials in this file or either package. Local/tunnel configurations belong
-in a separate test copy, never in release packages.
+Edit the skill in `shared/skills/collect-documents/SKILL.md`. Run `sync` to update
+both packages. Commit the generated files. Each plugin folder is ready to install;
+the client does not need to build it.
 
-## Release
+`release.json` sets the production MCP URL. Keep credentials and local test URLs
+out of this repo. ZIP files and checksums are written to `dist/`.
+
+## Publish
 
 ```sh
-python3 scripts/release.py probe       # read-only production OAuth/MCP check
-python3 scripts/release.py submission  # also require publication metadata
+python3 scripts/release.py probe       # Check public OAuth discovery
+python3 scripts/release.py submission  # Check required listing fields too
 ```
 
-See [RELEASE.md](RELEASE.md) for remaining submission decisions and the eight
-review scenarios. Package validation is not provider approval or an authenticated
-E2E test. Do not configure portal install buttons with this repository URL as a
-substitute for verified provider listing links. No automatic publication occurs.
+See [RELEASE.md](RELEASE.md) for test results and submission steps. These commands
+do not test authenticated uploads or publish a listing.
+
+Claude requires this repo to be public before a plugin bundle can go live.
+A standalone remote MCP connector does not require a public repo.
