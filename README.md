@@ -8,7 +8,7 @@ The server and portal code stay in the private platform repo.
 
 | Provider | Plugin folder | Submission |
 | --- | --- | --- |
-| OpenAI | `codex/current` | Upload the built ZIP to the Plugins portal |
+| OpenAI | `codex` | Upload the built ZIP to the Plugins portal |
 | Claude | `claude` | Submit this folder through the developer portal |
 
 ## Build
