@@ -11,7 +11,7 @@ from urllib.parse import urlparse
 import zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-PACKAGES = {'openai': ROOT / 'codex', 'claude': ROOT / 'claude'}
+PACKAGES = {'openai': ROOT / 'chatgpt', 'claude': ROOT / 'claude'}
 MANIFESTS = {'openai': '.codex-plugin/plugin.json', 'claude': '.claude-plugin/plugin.json'}
 
 
